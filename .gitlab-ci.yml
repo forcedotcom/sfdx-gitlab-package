@@ -6,7 +6,7 @@ before_script:
   - openssl aes-256-cbc -d -md md5 -in assets/server.key.enc -out assets/server.key -k $SERVER_KEY_PASSWORD
 
   # Install jq
-  - apt-get install -y jq
+  - apt update && apt -y install jq
 
   # Setup SFDX environment variables
   - export CLIURL=https://developer.salesforce.com/media/salesforce-cli/sfdx-linux-amd64.tar.xz  
@@ -17,7 +17,7 @@ before_script:
   - export SFDX_LOG_LEVEL=DEBUG
   - export ROOTDIR=force-app/main/default/
   - export TESTLEVEL=RunLocalTests
-  - export PACKAGENAME=z0Ho0N000000CaT3SAK
+  - export PACKAGENAME=0Ho1U000000CaUzSAK
   - export PACKAGEVERSION=""
 
   # Install SFDX
