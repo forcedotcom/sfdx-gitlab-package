@@ -40,18 +40,19 @@ If any any of these assumptions aren't true, the following steps won't work.
 
     Create an environment variable named `SERVER_KEY_PASSWORD` and set it as protected.
 
+10) Copy all the contents of `package-sfdx-project.json` into `sfdx-project.json` and save.
 
-10) Create the sample package running this command:
+11) Create the sample package running this command:
 
     `sfdx force:package:create --path force-app/main/default/ --name "GitLab CI" --description "GitLab CI Package Example" --packagetype Unlocked`
 
-11) Create the first package version.
+12) Create the first package version.
 
     `sfdx force:package:version:create --package "GitLab CI" --installationkeybypass --wait 10 --json --targetdevhubusername HubOrg`
 
-12) In the `.gitlab-ci.yml` file update the value in the `PACKAGENAME` variable to be Package Id in your sfdx-project.json file.  This id will start with `0Ho`.
+13) In the `.gitlab-ci.yml` file update the value in the `PACKAGENAME` variable to be Package Id in your sfdx-project.json file.  This id will start with `0Ho`.
 
-13) Commit the updated `sfdx-project.json` and `.gitlab-ci.yml` files.
+14) Commit the updated `sfdx-project.json` and `.gitlab-ci.yml` files.
 
 And you should be ready to go! Now when you commit and push a change, your change will kick off a GitLab CI build.
 
