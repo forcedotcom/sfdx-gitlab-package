@@ -1,5 +1,5 @@
 #
-# Download the SFDX CLI and install it
+# Download the Salesforce CLI and install it
 #
 before_script:
   # Decrypt server key
@@ -20,22 +20,22 @@ before_script:
   - export PACKAGENAME=0Ho1U000000CaUzSAK
   - export PACKAGEVERSION=""
 
-  # Install SFDX
+  # Install Salesforce CLI
   - mkdir sfdx
   - wget -qO- $CLIURL | tar xJ -C sfdx --strip-components 1
   - "./sfdx/install"
   - export PATH=./sfdx/$(pwd):$PATH
 
-  # Output SFDX version and plugin information
+  # Output CLI version and plug-in information
   - sfdx --version
   - sfdx plugins --core
 
 #
-# Deploy metadata to Salesforce
+# Deploy metadata to scratch org
 #
 deploy: 
   script:
-  # Authenticate to Salesforce using server key
+  # Authenticate to the Dev Hub using the server key
   - sfdx force:auth:jwt:grant --clientid $SF_CONSUMER_KEY --jwtkeyfile assets/server.key --username $SF_USERNAME --setdefaultdevhubusername --setalias HubOrg
 
   # Create scratch org
