@@ -2,9 +2,6 @@
 # Download the Salesforce CLI and install it
 #
 before_script:
-  # Decrypt server key
-  - openssl aes-256-cbc -d -md md5 -in assets/server.key.enc -out assets/server.key -k $SERVER_KEY_PASSWORD
-
   # Install jq
   - apt update && apt -y install jq
 
@@ -31,6 +28,9 @@ before_script:
   # Output CLI version and plug-in information
   - sfdx --version
   - sfdx plugins --core
+
+  # Decrypt server key
+  - openssl enc -nosalt -aes-256-cbc -d -in assets/server.key.enc -out assets/server.key -base64 -K $DECRYPTION_KEY -iv $DECRYPTION_IV
 
 #
 # Deploy metadata to scratch org
