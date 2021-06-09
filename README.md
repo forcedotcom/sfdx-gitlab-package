@@ -26,19 +26,39 @@ This repository shows one way you can successfully use scratch orgs to create ne
 
 7) Set up GitLab CI/CD [environment variables](https://gitlab.com/help/ci/variables/README#variables) for your Salesforce `Consumer Key` and `Username`. Note that this username is the username that you use to access your Salesforce org.
 
-    Create an environment variable named `SF_CONSUMER_KEY` and set it as protected.
+    Create an environment variable named `HUB_CONSUMER_KEY` and set it as protected.
 
-    Create an environment variable named `SF_USERNAME` and set it as protected.
+    Create an environment variable named `HUB_USER_NAME` and set it as protected.
 
     **Note:** Setting the variables as protected requires that you set the branch to protected as well.
 
-8) Encrypt the generated `server.key` file and add the encrypted file (`server.key.enc`) to the folder named `assets`.
+8) Encrypt and store your `server.key` using the instructions below.  
+    ***IMPORTANT!*** - For security reasons, don't store the `server.key` within the project.
 
-    `openssl aes-256-cbc -salt -e -in server.key -out server.key.enc -k password`
+    1. First, generate a `key` and an initializtion vector (`iv`) to encrypt your `server.key` file locally
+    (CircleCI will use the them to decrypt your `server.key` in the build environment).
 
-9) Set up GitLab CI/CD [environment variable](https://gitlab.com/help/ci/variables/README#variables) for the password you used to encrypt your `server.key` file.
+        ```bash
+        $ openssl enc -aes-256-cbc -k <passphrase here> -P -md sha1 -nosalt
+        ```
 
-    Create an environment variable named `SERVER_KEY_PASSWORD` and set it as protected.
+    2. Make note of the `key` and `iv` values output to the screen. You'll use them to encrypt your `server.key` in the next step.
+
+    3. Encrypt the `server.key` using the newly generated `key` and `iv` values. Use the `key` and `iv` values *only once*, and don't use them to encrypt more than the `server.key`.  While you can re-use this pair to encrypt other things, it's considered a security violation to do so. Every time you run the command above, a new `key` and `iv` value is generated. You can't regenerate the same pair, so if you lose these values you'll need to generate new ones and encrypt again.
+
+        ```bash
+        $ openssl enc -nosalt -aes-256-cbc -in server.key -out assets/server.key.enc -base64 -K <key> -iv <iv>
+        ```
+        This command replaces the existing `server.key.enc` with your encrypted version.
+
+9) Set up GitLab CI/CD [environment variable](https://gitlab.com/help/ci/variables/README#variables) The `key` and `iv` used to encrypt your `server.key` file.
+
+    Create an environment variable named `DECRYPTION_KEY` and set it as protected.
+
+    Create an environment variable named `DECRYPTION_IV` and set it as protected.
+
+    **Note:** Setting the variables as protected requires that you set the branch to protected as well.
+
 
 10) Copy all the contents of `package-sfdx-project.json` into `sfdx-project.json` and save.
 
