@@ -55,7 +55,6 @@ deploy:
 
   # Create package version
   - PACKAGEVERSION="$(sfdx force:package:version:create --package $PACKAGENAME --installationkeybypass --wait 10 --json --targetdevhubusername HubOrg | jq '.result.SubscriberPackageVersionId' | tr -d '"')"
-  - sleep 300 # Wait for package replication.
   - echo ${PACKAGEVERSION}
 
   # Create scratch org
@@ -63,7 +62,7 @@ deploy:
   - sfdx force:org:display --targetusername installorg
 
   # Install package in scratch org
-  - sfdx force:package:install --package $PACKAGEVERSION --wait 10 --targetusername installorg
+  - sfdx force:package:install --package $PACKAGEVERSION --publishwait 10 --wait 10 --targetusername installorg
 
   # Run unit tests in scratch org
   - sfdx force:apex:test:run --targetusername installorg --wait 10 --resultformat tap --codecoverage --testlevel $TESTLEVEL
